@@ -25,6 +25,11 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
