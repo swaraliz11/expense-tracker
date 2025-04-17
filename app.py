@@ -16,6 +16,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 con = sqlite3.connect("expense.db")
+db = con.cursor()
 
 @app.after_request
 def after_request(response):
@@ -28,6 +29,40 @@ def after_request(response):
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        # Ensure username was submitted 
+        if not username:
+            return apology("must provide username", 403)
+        # Ensure password was submitted
+        elif not password:
+            return apology("must provide password", 403)
+        # Ensure length of password submitted is not less than 5
+        elif len(password) < 5:
+            return apology("password should be at least 5 characters long")
+        # Ensure passwords match
+        elif password != confirm_password:
+            return apology("passwords do not match", 401)
+        
+        # Hash user's password
+        hash = generate_password_hash(password)
+
+        # Check if username already exists
+        try:
+            db.execute("INSERT INTO users (hash, username) VALUES (?, ?)", hash, username)
+        except ValueError:
+            return apology("username already exists")
+        
+        # Redirect to home page
+        else:
+            return redirect("/")
+
+    # User reached the route via GET (as by clicking a link or via redirect) 
+    else:
+        return render_template("register.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -38,7 +73,7 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        #Ensure username was submitted
+        # Ensure username was submitted
         if not request.form.get("username"):
             return apology("must provide username", 403)
         
@@ -47,7 +82,6 @@ def login():
             return apology("must provide password", 403)
         
         # Query database for username
-        db = con.cursor()
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
 
         # Ensure username exists and password is correct
