@@ -5,6 +5,8 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from helpers import apology, login_required
+
 # Configure application
 app = Flask(__name__)
 
@@ -26,8 +28,21 @@ def after_request(response):
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
+    # Forget any user_id
+    session.clear()
 
-
+    #User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        #Ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+        
+        #Ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+        
+        #Query database for username
+        
 
 
 
