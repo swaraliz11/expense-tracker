@@ -18,11 +18,6 @@ Session(app)
 con = sqlite3.connect("expense.db")
 db = con.cursor()
 
-app.route("/")
-def index():
-    """Show a summary of daily expenses"""
-    return apology("todo")
-
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -30,6 +25,12 @@ def after_request(response):
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
+app.route("/")
+@login_required
+def index():
+    """Show summary of daily expenses"""
+    return apology("todo")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
