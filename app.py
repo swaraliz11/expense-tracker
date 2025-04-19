@@ -18,6 +18,11 @@ Session(app)
 con = sqlite3.connect("expense.db")
 db = con.cursor()
 
+app.route("/")
+def index():
+    """Show a summary of daily expenses"""
+    return apology("todo")
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
