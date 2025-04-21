@@ -37,11 +37,12 @@ def register():
     """Register user"""
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        username = request.form.get("username")
+        name = request.form.get("name")
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
-        # Ensure username was submitted 
-        if not username:
+        income = request.form.get("income")
+        # Ensure name was submitted 
+        if not name:
             return apology("must provide username", 403)
         # Ensure password was submitted
         elif not password:
@@ -52,13 +53,16 @@ def register():
         # Ensure passwords match
         elif password != confirm_password:
             return apology("passwords do not match", 401)
+        # Ensure income was submitted
+        elif not income:
+            return apology("must provide income", 403)
         
         # Hash user's password
         hash = generate_password_hash(password)
 
         # Check if username already exists
         try:
-            db.execute("INSERT INTO users (hash, username) VALUES (?, ?)", hash, username)
+            db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?)", hash, name, income)
         except ValueError:
             return apology("username already exists")
         
