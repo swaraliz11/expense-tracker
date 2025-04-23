@@ -15,7 +15,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-con = sqlite3.connect("expense.db")
+con = sqlite3.connect("expense.db", check_same_thread=False)
 con.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
 db = con.cursor()
 
