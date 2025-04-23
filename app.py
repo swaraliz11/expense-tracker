@@ -15,9 +15,9 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-con = sqlite3.connect("expense.db", check_same_thread=False)
-con.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-db = con.cursor()
+#con = sqlite3.connect("expense.db")
+#con.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
+#db = con.cursor()
 
 @app.after_request
 def after_request(response):
@@ -63,7 +63,10 @@ def register():
 
         # Check if username already exists
         try:
-            db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", (hash, name, income))
+            with sqlite3.connect("expense.db") as con:
+                db = con.cursor()
+                db.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL")
+                con.commit()
         except ValueError:
             return apology("username already exists")
         
@@ -93,7 +96,10 @@ def login():
             return apology("must provide password", 403)
         
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        with sqlite3.connect("expense.db") as con:
+                db = con.cursor()
+                rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+                con.commit()
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
