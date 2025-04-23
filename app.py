@@ -63,7 +63,7 @@ def register():
 
         # Check if username already exists
         try:
-            with sqlite3.connect("expense.db") as con:
+            with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
                 db.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL")
                 con.commit()
@@ -96,7 +96,7 @@ def login():
             return apology("must provide password", 403)
         
         # Query database for username
-        with sqlite3.connect("expense.db") as con:
+        with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
                 rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
                 con.commit()
