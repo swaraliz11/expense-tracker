@@ -15,9 +15,12 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-#con = sqlite3.connect("expense.db")
-#con.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-#db = con.cursor()
+# Create table
+with sqlite3.connect("expense.db", check_same_thread=False) as con:
+    db = con.cursor()
+    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL")
+    con.commit()
+    con.close()
 
 @app.after_request
 def after_request(response):
@@ -63,10 +66,7 @@ def register():
 
         # Check if user already exists
         try:
-            with sqlite3.connect("expense.db", check_same_thread=False) as con:
-                db = con.cursor()
-                db.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL")
-                con.commit()
+            db.execute("INSERT INTO users (hash, name) VALUES (?, ?)", hash, name)
         except ValueError:
             return apology("user already exists")
         
