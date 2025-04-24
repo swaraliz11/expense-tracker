@@ -101,7 +101,7 @@ def login():
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 con.row_factory = sqlite3.Row
                 db = con.cursor()
-                db.execute("SELECT * FROM users WHERE name = ?", request.form.get("name"))
+                db.execute("SELECT * FROM users WHERE name = ?", (request.form.get("name")))
                 rows = db.fetchall()
                 con.commit()
 
