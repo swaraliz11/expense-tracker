@@ -61,14 +61,14 @@ def register():
         # Hash user's password
         hash = generate_password_hash(password)
 
-        # Check if username already exists
+        # Check if user already exists
         try:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
                 db.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL")
                 con.commit()
         except ValueError:
-            return apology("username already exists")
+            return apology("user already exists")
         
         # Redirect to home page
         else:
@@ -87,24 +87,24 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
+        # Ensure name was submitted
+        if not request.form.get("name"):
+            return apology("must provide name", 403)
         
         # Ensure password was submitted
         elif not request.form.get("password"):
             return apology("must provide password", 403)
         
-        # Query database for username
+        # Query database for name
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+                rows = db.execute("SELECT * FROM users WHERE name = ?", request.form.get("name"))
                 con.commit()
                 con.close()
 
-        # Ensure username exists and password is correct
+        # Ensure name exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid username and/or password", 403)
+            return apology("invalid name and/or password", 403)
         
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
