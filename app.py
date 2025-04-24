@@ -67,7 +67,7 @@ def register():
         try:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", (hash, name, income))
+                db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", [hash, name, income])
                 con.commit()
         except ValueError:
             return apology("user already exists")
@@ -103,7 +103,7 @@ def login():
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 con.row_factory = sqlite3.Row
                 db = con.cursor()
-                db.execute("SELECT * FROM users WHERE name = ?", name)
+                db.execute("SELECT * FROM users WHERE name = ?", [name])
                 rows = db.fetchall()
                 con.commit()
 
