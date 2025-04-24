@@ -66,7 +66,7 @@ def register():
 
         # Check if user already exists
         try:
-            db.execute("INSERT INTO users (hash, name) VALUES (?, ?)", hash, name)
+            db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?)", hash, name, income)
         except ValueError:
             return apology("user already exists")
         
