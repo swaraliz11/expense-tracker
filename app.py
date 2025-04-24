@@ -18,9 +18,8 @@ Session(app)
 # Create table
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
-    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL")
+    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
     con.commit()
-    con.close()
 
 @app.after_request
 def after_request(response):
@@ -66,9 +65,10 @@ def register():
 
         # Check if user already exists
         try:
-            db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", (hash, name, income))
-            con.commit()
-            con.close()
+            with sqlite3.connect("expense.db", check_same_thread=False) as con:
+                db = con.cursor()
+                db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", (hash, name, income))
+                con.commit()
         except ValueError:
             return apology("user already exists")
         
@@ -99,10 +99,11 @@ def login():
         
         # Query database for name
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
+                con.row_factory = sqlite3.Row
                 db = con.cursor()
-                rows = db.execute("SELECT * FROM users WHERE name = ?", request.form.get("name"))
+                db.execute("SELECT * FROM users WHERE name = ?", request.form.get("name"))
+                rows = db.fetchall()
                 con.commit()
-                con.close()
 
         # Ensure name exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
