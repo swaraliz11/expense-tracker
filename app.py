@@ -99,7 +99,7 @@ def login():
         elif not request.form.get("password"):
             return apology("must provide password", 403)
         
-        name = request.form.get(name)
+        name = request.form.get("name")
         
         # Query database for name
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
