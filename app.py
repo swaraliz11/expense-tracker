@@ -16,15 +16,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Create table
-"""with sqlite3.connect("expense.db", check_same_thread=False) as con:
-    db = con.cursor()
-    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-    con.commit()
-con.close()"""
-
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
-    db.execute("DROP TABLE users")
+    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
     con.commit()
 con.close()
 
@@ -84,11 +78,18 @@ def register():
         except ValueError:
             return apology("user already exists")"""
         
-        # with sqlite3.connect("expense.db", check_same_thread=False) as con:
+        with sqlite3.connect("expense.db", check_same_thread=False) as con:
+            db = con.cursor()
+            count = db.execute("SELECT COUNT(*) FROM users WHERE email = ?", email)
+            con.commit()
+        con.close()
+
+        if count > 0:
+            return apology("user already exists")
         
         # Redirect to home page
-        #else:
-            #return redirect("/")
+        else:
+            return redirect("/")
 
     # User reached the route via GET (as by clicking a link or via redirect) 
     else:
