@@ -91,7 +91,7 @@ def register():
                 return redirect("/")
         con.close()
 
-    # User reached the route via GET (as by clicking a link or via redirect) 
+    # User reached the route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
 
