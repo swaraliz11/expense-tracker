@@ -82,15 +82,14 @@ def register():
             db = con.cursor()
             db.execute("SELECT COUNT(*) FROM users WHERE email = ?", [email])
             count = db.fetchone()[0]
-            con.commit()
+            if count > 0:
+                return apology("user already exists")
+            else:
+                db.execute("INSERT INTO users (name, email, hash, income) VALUES (?, ?, ?, ?)", [name, email, hash, income])
+                con.commit()
+                # Redirect to home page
+                return redirect("/")
         con.close()
-
-        if count > 0:
-            return apology("user already exists")
-        
-        # Redirect to home page
-        else:
-            return redirect("/")
 
     # User reached the route via GET (as by clicking a link or via redirect) 
     else:
