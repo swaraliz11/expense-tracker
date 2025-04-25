@@ -80,7 +80,7 @@ def register():
         
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
             db = con.cursor()
-            count = db.execute("SELECT COUNT(*) FROM users WHERE email = ?", (email))
+            count = db.execute("SELECT COUNT(*) FROM users WHERE email = ?", [email])
             con.commit()
         con.close()
 
