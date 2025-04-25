@@ -47,7 +47,7 @@ def register():
         income = request.form.get("income")
         # Ensure name was submitted 
         if not name:
-            return apology("must provide username", 403)
+            return apology("must provide name", 403)
         # Ensure password was submitted
         elif not password:
             return apology("must provide password", 403)
