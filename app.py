@@ -69,6 +69,10 @@ def register():
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
                 db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", [hash, name, income])
+                db.execute("SELECT * FROM users")
+                rows = db.fetchall()
+                for row in rows:
+                    print(row)
                 con.commit()
             con.close()
         except ValueError:
