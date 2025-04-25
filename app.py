@@ -68,7 +68,7 @@ def register():
         try:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                db.execute("INSERT INTO users (hash, name, income) VALUES (?, ?, ?)", [hash, name, income])
+                db.execute("INSERT INTO users (name, hash, income) VALUES (?, ?, ?)", [name, hash, income])
                 db.execute("SELECT * FROM users")
                 rows = db.fetchall()
                 for row in rows:
