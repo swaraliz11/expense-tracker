@@ -16,9 +16,15 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Create table
-with sqlite3.connect("expense.db", check_same_thread=False) as con:
+"""with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
+    con.commit()
+con.close()"""
+
+with sqlite3.connect("expense.db", check_same_thread=False) as con:
+    db = con.cursor()
+    db.execute("DROP TABLE users")
     con.commit()
 con.close()
 
@@ -42,12 +48,16 @@ def register():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         name = request.form.get("name")
+        email = request.form.get("email")
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         income = request.form.get("income")
         # Ensure name was submitted 
         if not name:
             return apology("must provide name", 403)
+        # Ensure email was submitted
+        if not email:
+            return apology("must provide email address", 403)
         # Ensure password was submitted
         elif not password:
             return apology("must provide password", 403)
@@ -65,18 +75,20 @@ def register():
         hash = generate_password_hash(password)
 
         # Check if user already exists
-        try:
+        """try:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                db.execute("INSERT INTO users (name, hash, income) VALUES (?, ?, ?)", [name, hash, income])
+                db.execute("INSERT INTO users (name, email, hash, income) VALUES (?, ?, ?, ?)", [name, email, hash, income])
                 con.commit()
             con.close()
         except ValueError:
-            return apology("user already exists")
+            return apology("user already exists")"""
+        
+        # with sqlite3.connect("expense.db", check_same_thread=False) as con:
         
         # Redirect to home page
-        else:
-            return redirect("/")
+        #else:
+            #return redirect("/")
 
     # User reached the route via GET (as by clicking a link or via redirect) 
     else:
@@ -100,6 +112,7 @@ def login():
             return apology("must provide password", 403)
         
         name = request.form.get("name")
+        password = request.form.get("password")
         
         # Query database for name
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
