@@ -69,15 +69,6 @@ def register():
         hash = generate_password_hash(password)
 
         # Check if user already exists
-        """try:
-            with sqlite3.connect("expense.db", check_same_thread=False) as con:
-                db = con.cursor()
-                db.execute("INSERT INTO users (name, email, hash, income) VALUES (?, ?, ?, ?)", [name, email, hash, income])
-                con.commit()
-            con.close()
-        except ValueError:
-            return apology("user already exists")"""
-        
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
             db = con.cursor()
             db.execute("SELECT COUNT(*) FROM users WHERE email = ?", [email])
@@ -141,7 +132,7 @@ def login():
 @app.route("/budget")
 def budget():
     """Show monthly budget and savings"""
-    
+
     
 @app.route("/logout")
 def logout():
