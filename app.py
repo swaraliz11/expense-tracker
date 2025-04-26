@@ -132,7 +132,15 @@ def login():
 @app.route("/budget")
 def budget():
     """Show monthly budget and savings"""
-
+    if request.method == "POST":
+        budget = request.form.get("budget")
+        savings = request.form.get("savings")
+        if not budget:
+            return apology("must provide budget", 403)
+        elif not savings:
+            return apology("must provide savings")
+        else:
+            return render_template("budget2.html")
     
 @app.route("/logout")
 def logout():
