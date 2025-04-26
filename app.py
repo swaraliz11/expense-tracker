@@ -141,6 +141,8 @@ def budget():
             return apology("must provide savings")
         else:
             return render_template("budget2.html")
+    else:
+        return render_template("budget2.html")
     
 @app.route("/logout")
 def logout():
