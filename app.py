@@ -104,18 +104,18 @@ def login():
 
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        # Ensure name was submitted
-        if not request.form.get("name"):
-            return apology("must provide name", 403)
+        # Ensure email was submitted
+        if not request.form.get("email"):
+            return apology("must provide email", 403)
         
         # Ensure password was submitted
         elif not request.form.get("password"):
             return apology("must provide password", 403)
         
-        name = request.form.get("name")
+        email = request.form.get("email")
         password = request.form.get("password")
         
-        # Query database for name
+        # Query database for email
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
             con.row_factory = sqlite3.Row
             db = con.cursor()
@@ -124,9 +124,9 @@ def login():
             con.commit()
         con.close()
 
-        # Ensure name exists and password is correct
+        # Ensure user exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid name and/or password", 403)
+            return apology("invalid email and/or password", 403)
         
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
