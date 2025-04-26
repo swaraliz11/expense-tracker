@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Savings and Budget
+{% endblock %}
+
+{% block main %}
+    <form action="/budget" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="budget" placeholder="Monthly Budget" type="number">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="savings" placeholder="Monthly Savings" type="number">
+        </div>
+    </form>
+{% endblock %}
