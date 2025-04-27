@@ -140,9 +140,10 @@ def budget():
         elif not savings:
             return apology("must provide savings")
         else:
+            expenses = budget - savings
             return render_template("budget2.html")
     else:
-        return render_template("budget2.html")
+        return render_template("budget.html")
     
 @app.route("/logout")
 def logout():
