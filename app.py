@@ -141,7 +141,7 @@ def budget():
             return apology("must provide savings")
         else:
             expenses = budget - savings
-            return render_template("budget2.html")
+            return render_template("budget2.html", monthly_budget=budget, monthly_savings=savings, monthly_expenses=expenses)
     else:
         return render_template("budget.html")
     
