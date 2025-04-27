@@ -129,7 +129,7 @@ def login():
     else:
         return render_template("login.html")
 
-@app.route("/budget")
+@app.route("/budget", methods=["GET", "POST"])
 def budget():
     """Show monthly budget and savings"""
     if request.method == "POST":
