@@ -133,8 +133,8 @@ def login():
 def budget():
     """Show monthly budget and savings"""
     if request.method == "POST":
-        budget = request.form.get("budget")
-        savings = request.form.get("savings")
+        budget = int(request.form.get("budget"))
+        savings = int(request.form.get("savings"))
         if not budget:
             return apology("must provide budget", 403)
         elif not savings:
