@@ -16,10 +16,17 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Create table
+# Create table for storing information about user
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
+    con.commit()
+con.close()
+
+# Create table for storing categories of expenses
+with sqlite3.connect("expense.db", check_same_thread=False) as con:
+    db = con.cursor()
+    db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL")
     con.commit()
 con.close()
 
@@ -130,9 +137,30 @@ def login():
         return render_template("login.html")
 
 @app.route("/record", methods=["GET", "POST"])
+@login_required
 def record():
     """Record expenses"""
-
+    if request.method == "POST":
+        user_id = session["user_id"]
+        amount = request.form.get("amount")
+        category = request.form.get("category")
+        date = request.form.get("date")
+        if not amount:
+            return apology("must enter amount")
+        elif not category:
+            return apology("must enter category")
+        elif not date:
+            return apology("must enter date")
+        else:
+            with sqlite3.connect("database.db", check_same_thread=False) as con:
+                db = con.cursor()
+                db.execute("INSERT INTO record (user_id, date, amount, category) VALUES (?, ?, ?, ?)", [user_id, amount, date, category])
+                con.commit()
+            con.close()
+            return render_template("/")
+    else:
+        return render_template("record.html")
+    
 @app.route("/logout")
 def logout():
     """Log user out"""
