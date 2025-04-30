@@ -1,5 +1,6 @@
 import os 
 import sqlite3
+import datetime
 
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
@@ -128,22 +129,6 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
-
-@app.route("/budget", methods=["GET", "POST"])
-def budget():
-    """Show monthly budget and savings"""
-    if request.method == "POST":
-        budget = int(request.form.get("budget"))
-        savings = int(request.form.get("savings"))
-        if not budget:
-            return apology("must provide budget", 403)
-        elif not savings:
-            return apology("must provide savings")
-        else:
-            expenses = budget - savings
-            return render_template("budget2.html", monthly_budget=budget, monthly_savings=savings, monthly_expenses=expenses)
-    else:
-        return render_template("budget.html")
     
 @app.route("/logout")
 def logout():
