@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Record 
+{% endblock %}
+
+{% block main %}
+<form action="/record" method="post">
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="amount" placeholder="Amount" type="text">
+    </div>
+    <div class="mb-3">
+        <select multiple class="form-control" name="category">
+            <option> Food  </option>
+            <option> Utilities </option>
+            <option> Health Care </option>
+            <option> Debt </option>
+            <option> Insurance </option>
+            <option> Transportation </option>
+            <option> Clothing </option>
+            <option> Entertainment </option>
+            <option> Miscellaneous </option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="date" placeholder="Date of transaction" type="date">
+    </div>
+</form>
