@@ -16,16 +16,10 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Create table for storing information about user
+# Create tables
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-    con.commit()
-con.close()
-
-# Create table for storing categories of expenses
-with sqlite3.connect("expense.db", check_same_thread=False) as con:
-    db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
 con.close()
