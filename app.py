@@ -105,7 +105,6 @@ def login():
             return apology("must provide password", 403)
         
         email = request.form.get("email")
-        password = request.form.get("password")
         
         # Query database for email
         with sqlite3.connect("expense.db", check_same_thread=False) as con:
