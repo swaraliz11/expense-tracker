@@ -26,7 +26,7 @@ con.close()
 # Create table for storing categories of expenses
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
-    db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL")
+    db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
 con.close()
 
