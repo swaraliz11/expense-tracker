@@ -22,7 +22,6 @@ with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
     db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
-con.close()
 
 @app.after_request
 def after_request(response):
@@ -146,12 +145,12 @@ def record():
         elif not date:
             return apology("must enter date")
         else:
-            with sqlite3.connect("database.db", check_same_thread=False) as con:
+            with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                db.execute("INSERT INTO record (user_id, date, amount, category) VALUES (?, ?, ?, ?)", [user_id, amount, date, category])
+                db.execute("INSERT INTO record (user_id, date, amount, category) VALUES (?, ?, ?, ?)", [user_id, date, amount, category])
                 con.commit()
             con.close()
-            return render_template("/")
+            return redirect("/")
     else:
         return render_template("record.html")
     
