@@ -15,9 +15,9 @@
         </thead>
         <tbody>
             {% for c in range(0, count) %}
-                {% set date = record[c]["date"] %}
-                {% set amount = record[c]["amount"] %}
-                {% set category = record[c]["category"] %}
+                {% set date = record_of_expenses[c]["date"] %}
+                {% set amount = record_of_expenses[c]["amount"] %}
+                {% set category = record_of_expenses[c]["category"] %}
                 <tr>
                     <td> {{ date }} </td>
                     <td> {{ amount }} </td>
