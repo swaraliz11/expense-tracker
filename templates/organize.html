@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Record 
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> Date of Transaction </th>
+                <th> Amount Spent </th>
+                <th> Category of Expense </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in range(0, count) %}
+                {% set date = record[c]["date"] %}
+                {% set amount = record[c]["amount"] %}
+                {% set category = record[c]["category"] %}
+                <tr>
+                    <td> {{ date }} </td>
+                    <td> {{ amount }} </td>
+                    <td> {{ category }} </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
