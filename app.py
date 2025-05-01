@@ -166,6 +166,18 @@ def record():
 @login_required
 def organization():
     """Sort expenses by date, amount, category"""
+    user_id = session["user_id"]
+    with sqlite3.connect("expense.db", check_same_thread=False) as con:
+        con.row_factory = sqlite3.Row
+        db = con.cursor()
+        db.execute("SELECT * FROM record WHERE user_id = ?", [user_id])
+        record_of_expenses = db.fetchall()
+        db.execute("SELECT COUNT(*) FROM record WHERE user_id = ?", [user_id])
+        count = db.fetchone()[0]
+        con.commit()
+    con.close()
+    return render_template("organize.html", record_of_expenses=record_of_expenses, count=count)
+
     
 @app.route("/logout")
 def logout():
