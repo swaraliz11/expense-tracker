@@ -161,6 +161,11 @@ def record():
     # User reached route via GET (as by clicking or via redirect)
     else:
         return render_template("record.html")
+
+@app.route("/organization")
+@login_required
+def organization():
+    """Sort expenses by date, amount, category"""
     
 @app.route("/logout")
 def logout():
