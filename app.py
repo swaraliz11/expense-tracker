@@ -137,18 +137,23 @@ def record():
     if request.method == "POST":
         # Get the id of the user logged in
         user_id = session["user_id"]
+
         amount = request.form.get("amount")
         category = request.form.get("category")
         date = request.form.get("date")
+
         # Ensure user enters amount spent
         if not amount:
             return apology("must enter amount")
+        
         # Ensure user enters category of expense
         elif not category:
             return apology("must enter category")
+        
         # Ensure user enters date of transaction
         elif not date:
             return apology("must enter date")
+        
         # Record expense
         else:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
@@ -158,6 +163,7 @@ def record():
             con.close()
             # Redirect the user to the homepage
             return redirect("/")
+        
     # User reached route via GET (as by clicking or via redirect)
     else:
         return render_template("record.html")
@@ -166,7 +172,10 @@ def record():
 @login_required
 def organization():
     """Sort expenses by date, amount, category"""
+    # Get the id of the user logged in
     user_id = session["user_id"]
+
+    # Get the record of expenses and count of rows in record
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
@@ -176,6 +185,8 @@ def organization():
         count = db.fetchone()[0]
         con.commit()
     con.close()
+
+    # Show summary of expenses in the form of a table
     return render_template("organize.html", record_of_expenses=record_of_expenses, count=count)
 
 @app.route("/logout")
