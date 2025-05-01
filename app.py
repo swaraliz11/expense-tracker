@@ -178,7 +178,6 @@ def organization():
     con.close()
     return render_template("organize.html", record_of_expenses=record_of_expenses, count=count)
 
-    
 @app.route("/logout")
 def logout():
     """Log user out"""
