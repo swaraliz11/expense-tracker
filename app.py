@@ -133,24 +133,32 @@ def login():
 @login_required
 def record():
     """Record expenses"""
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
+        # Get the id of the user logged in
         user_id = session["user_id"]
         amount = request.form.get("amount")
         category = request.form.get("category")
         date = request.form.get("date")
+        # Ensure user enters amount spent
         if not amount:
             return apology("must enter amount")
+        # Ensure user enters category of expense
         elif not category:
             return apology("must enter category")
+        # Ensure user enters date of transaction
         elif not date:
             return apology("must enter date")
+        # Record expense
         else:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
                 db.execute("INSERT INTO record (user_id, date, amount, category) VALUES (?, ?, ?, ?)", [user_id, date, amount, category])
                 con.commit()
             con.close()
+            # Redirect the user to the homepage
             return redirect("/")
+    # User reached route via GET (as by clicking or via redirect)
     else:
         return render_template("record.html")
     
