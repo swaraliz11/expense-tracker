@@ -35,12 +35,14 @@ def after_request(response):
 @login_required
 def index():
     """Show summary of expenses"""
-    return apology("todo")
-    """current_month = datetime.now().month
-    current_date = datetime.now().date
+    current_month = datetime.now().month
+    current_day = datetime.today().day
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
-        db.execute("SELECT * FROM record WHERE date ")"""
+        db.execute("SELECT month FROM record WHERE month = ?", current_month)
+        month = db.fetchall()
+        if month == current_month:
+            db.execute("SELECT amount ")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
