@@ -35,10 +35,7 @@ def after_request(response):
 @login_required
 def index():
     """Show summary of expenses"""
-    if request.method == "POST":
-        return render_template("organize.html")
-    else:
-        return render_template("index.html")
+    return render_template("index.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
