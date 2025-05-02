@@ -165,7 +165,7 @@ def record():
         else:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                db.execute("INSERT INTO record (user_id, date, month, date, amount, category) VALUES (?, ?, ?, ?, ?, ?)", [user_id, date, month, date, amount, category])
+                db.execute("INSERT INTO record (user_id, date, month, day, amount, category) VALUES (?, ?, ?, ?, ?, ?)", [user_id, date, month, day, amount, category])
                 con.commit()
             con.close()
             # Redirect the user to the homepage
