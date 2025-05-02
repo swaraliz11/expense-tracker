@@ -141,7 +141,7 @@ def record():
         amount = request.form.get("amount")
         category = request.form.get("category")
         date = request.form.get("date")
-        month = datetime.month()
+        month = datetime.now().month
 
         # Ensure user enters amount spent
         if not amount:
