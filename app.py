@@ -20,7 +20,8 @@ Session(app)
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-    db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, month VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
+    db.execute("DROP TABLE record")
+    #db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, month VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
 
 @app.after_request
@@ -31,11 +32,16 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 @login_required
 def index():
     """Show summary of expenses"""
     return apology("todo")
+    """current_month = datetime.now().month
+    current_date = datetime.now().date
+    with sqlite3.connect("expense.db", check_same_thread=False) as con:
+        db = con.cursor()
+        db.execute("SELECT * FROM record WHERE date ")"""
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -142,6 +148,7 @@ def record():
         category = request.form.get("category")
         date = request.form.get("date")
         month = datetime.now().month
+        day = datetime.today().day
 
         # Ensure user enters amount spent
         if not amount:
