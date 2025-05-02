@@ -34,8 +34,8 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    """Show summary of daily expenses"""
-    return apology("todo")
+    """Show summary of expenses"""
+    return render_template("index.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
