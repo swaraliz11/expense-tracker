@@ -37,11 +37,12 @@ def index():
     """Show summary of expenses"""
     current_month = int(datetime.now().month)
     current_day = datetime.today().day
+    current_year = datetime.today().year
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
-        db.execute("SELECT month FROM record WHERE month = ?", [current_month])
+        db.execute("SELECT month FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         month = int(db.fetchone()[0])
-        db.execute("SELECT amount FROM record WHERE month = ?", [current_month])
+        db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         amount = db.fetchall()[0]
         con.commit()
     con.close()
