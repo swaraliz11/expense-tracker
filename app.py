@@ -20,7 +20,8 @@ Session(app)
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-    db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, month VARCHAR NOT NULL, day VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
+    db.execute("DROP TABLE record")
+    #db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, year VARCHAR NOT NULL, month VARCHAR NOT NULL, day VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
 
 @app.after_request
@@ -35,18 +36,16 @@ def after_request(response):
 @login_required
 def index():
     """Show summary of expenses"""
-    current_month = datetime.now().month
+    current_month = int(datetime.now().month)
     current_day = datetime.today().day
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
         db.execute("SELECT month FROM record WHERE month = ?", [current_month])
-        month = db.fetchone()[0]
+        month = int(db.fetchone()[0])
+        db.execute("SELECT amount FROM record WHERE month = ?", [current_month])
+        amount = db.fetchall()[0]
         con.commit()
     con.close()
-    print(month)
-    print(current_month)
-    if current_month == month:
-        return apology("success")
     return apology("todo")
 
 @app.route("/register", methods=["GET", "POST"])
