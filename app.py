@@ -153,6 +153,7 @@ def record():
         date = request.form.get("date")
         month = datetime.now().month
         day = datetime.today().day
+        year = datetime.today().year
 
         # Ensure user enters amount spent
         if not amount:
@@ -170,7 +171,7 @@ def record():
         else:
             with sqlite3.connect("expense.db", check_same_thread=False) as con:
                 db = con.cursor()
-                db.execute("INSERT INTO record (user_id, date, month, day, amount, category) VALUES (?, ?, ?, ?, ?, ?)", [user_id, date, month, day, amount, category])
+                db.execute("INSERT INTO record (user_id, date, year, month, day, amount, category) VALUES (?, ?, ?, ?, ?, ?, ?)", [user_id, date, year, month, day, amount, category])
                 con.commit()
             con.close()
             # Redirect the user to the homepage
