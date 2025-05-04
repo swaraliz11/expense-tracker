@@ -38,12 +38,20 @@ def index():
     current_month = int(datetime.now().month)
     current_day = datetime.today().day
     current_year = datetime.today().year
+    user_id = session["user_id"]
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
+        db.execute("SELECT COUNT(*) FROM record")
+        count = int(db.fetchone()[0])
+        if count == 0:
+            return apology("you don't have any expenses so far")
         db.execute("SELECT month FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         month = int(db.fetchone()[0])
+        db.execute("SELECT income FROM uers WHERE id = ?", [user_id])
+        income = db.fetchone()[0]
         db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         amount = db.fetchall()[0]
+        print(amount)
         con.commit()
     con.close()
     return apology("todo")
