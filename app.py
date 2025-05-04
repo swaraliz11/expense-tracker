@@ -39,7 +39,7 @@ def index():
     current_day = datetime.today().day
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
-        db.execute("SELECT month FROM record if month = ?", current_month)
+        db.execute("SELECT month FROM record WHERE month = ?", current_month)
         month = db.fetchall()
         con.commit()
     con.close()
