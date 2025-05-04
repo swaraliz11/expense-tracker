@@ -19,7 +19,7 @@ Session(app)
 # Create tables
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
-    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL, budget NUMERIC NOT NULL)")
     db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, year VARCHAR NOT NULL, month VARCHAR NOT NULL, day VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
 
@@ -47,14 +47,14 @@ def index():
             return apology("you don't have any expenses so far")
         db.execute("SELECT month FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         month = int(db.fetchone()[0])
-        db.execute("SELECT income FROM uers WHERE id = ?", [user_id])
+        db.execute("SELECT income FROM users WHERE id = ?", [user_id])
         income = db.fetchone()[0]
         db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
-        amount = db.fetchall()[0]
-        print(amount)
+        amount = db.fetchall()
+        db.execute("SELECT category FROM record WHERE month = ? AND year = ?", [current_month, current_year])
+        category = db.fetchall()
         con.commit()
     con.close()
-    return apology("todo")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -66,6 +66,7 @@ def register():
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
         income = request.form.get("income")
+        budget = request.form.get("budget")
         # Ensure name was submitted 
         if not name:
             return apology("must provide name", 403)
@@ -84,6 +85,8 @@ def register():
         # Ensure income was submitted
         elif not income:
             return apology("must provide income", 403)
+        elif not budget:
+            return apology("must provide budget", 403)
         
         # Hash user's password
         hash = generate_password_hash(password)
@@ -96,7 +99,7 @@ def register():
             if count > 0:
                 return apology("user already exists")
             else:
-                db.execute("INSERT INTO users (name, email, hash, income) VALUES (?, ?, ?, ?)", [name, email, hash, income])
+                db.execute("INSERT INTO users (name, email, hash, income, budget) VALUES (?, ?, ?, ?, ?)", [name, email, hash, income, budget])
                 con.commit()
                 # Redirect to home page
                 return redirect("/")
