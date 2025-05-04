@@ -40,10 +40,13 @@ def index():
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
         db.execute("SELECT month FROM record WHERE month = ?", [current_month])
-        month = db.fetchall()
+        month = db.fetchone()[0]
         con.commit()
     con.close()
     print(month)
+    print(current_month)
+    if current_month == month:
+        return apology("success")
     return apology("todo")
 
 @app.route("/register", methods=["GET", "POST"])
