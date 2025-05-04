@@ -20,8 +20,7 @@ Session(app)
 with sqlite3.connect("expense.db", check_same_thread=False) as con:
     db = con.cursor()
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name TEXT NOT NULL, email VARCHAR NOT NULL, hash TEXT NOT NULL, income NUMERIC NOT NULL)")
-    db.execute("DROP TABLE record")
-    #db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, year VARCHAR NOT NULL, month VARCHAR NOT NULL, day VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS record (user_id NUMERIC NOT NULL, date VARCHAR NOT NULL, year VARCHAR NOT NULL, month VARCHAR NOT NULL, day VARCHAR NOT NULL, amount NUMERIC, category TEXT NOT NULL)")
     con.commit()
 
 @app.after_request
