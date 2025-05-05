@@ -51,8 +51,13 @@ def index():
         income = db.fetchone()[0]
         db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         amount = db.fetchall()
-        db.execute("SELECT category FROM record WHERE month = ? AND year = ?", [current_month, current_year])
-        category = db.fetchall()
+        categories = ["Food", "Utilities", "Health Care", "Debt", "Insurance", "Transportation", "Clothing", "Entertainment", "Miscellaneous"]
+        expenses = []
+        for category in categories:
+            db.execute("SELECT amount FROM record WHERE month = ? AND year = ? AND category = ?", [current_month, current_year, category])
+            amount = db.fetchall()
+            expenses.append(amount)
+        print(expenses)
         con.commit()
     con.close()
 
