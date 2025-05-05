@@ -51,15 +51,25 @@ def index():
         income = db.fetchone()[0]
         db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
         amount = db.fetchall()
+        expenses_for_this_month = 0
+        for amt in amount:
+            expenses_for_this_month = expenses_for_this_month + amt
         categories = ["Food", "Utilities", "Health Care", "Debt", "Insurance", "Transportation", "Clothing", "Entertainment", "Miscellaneous"]
         expenses = []
         for category in categories:
             db.execute("SELECT amount FROM record WHERE month = ? AND year = ? AND category = ?", [current_month, current_year, category])
             amount = db.fetchall()
             expenses.append(amount)
-        print(expenses)
+        db.execute("SELECT budget FROM users WHERE id = ?", user_id)
+        budget = db.fetchone()[0]
         con.commit()
     con.close()
+    for i in range(len(expenses)):
+        if expenses[i + 1] > expenses[i]:
+            category_with_most_expenses = expenses[i + 1]
+        else:
+            category_with_most_expenses = expenses[i]
+    return render_template("index.html", income=income, expenses_for_this_month=expenses_for_this_month, category_with_most_expenses=category_with_most_expenses, budget=budget)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
