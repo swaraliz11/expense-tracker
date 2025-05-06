@@ -5,12 +5,39 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container-md"> Welcome to Expense Tracker! </div>
+    <div class="container-md"> 
+      <h1> Welcome to Expense Tracker! </h1>
+    </div>
     <div class="card border-dark mb-3">
-        <div class="card-header"> Posted Mar 3, 2023 </div>
+        <div class="card-header">
+          <h5 class="card-title"> Monthly Income </h5>
+        </div>
         <div class="card-body">
-          <h5 class="card-title"> Frontend Developer </h5>
-          <p class="card-text"> Bengaluru, India • ₹12,00,000 </p>
+          <p class="card-text"> {{ income }} </p>
+        </div>
+      </div>
+      <div class="card border-dark mb-3">
+        <div class="card-header">
+          <h5 class="card-title"> This Month's Expenses </h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text"> {{ expenses_for_this_month }} </p>
+        </div>
+      </div>
+      <div class="card border-dark mb-3">
+        <div class="card-header">
+          <h5 class="card-title"> Category With Most Expenses </h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text"> {{ category_with_most_expenses }} </p>
+        </div>
+      </div>
+      <div class="card border-dark mb-3">
+        <div class="card-header">
+          <h5 class="card-title"> Monthly Budget </h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text"> {{ budget }} </p>
         </div>
       </div>
 {% endblock %} 
