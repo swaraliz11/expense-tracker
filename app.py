@@ -45,30 +45,33 @@ def index():
         count = int(db.fetchone()[0])
         if count == 0:
             return apology("you don't have any expenses so far")
-        db.execute("SELECT month FROM record WHERE month = ? AND year = ?", [current_month, current_year])
-        month = int(db.fetchone()[0])
         db.execute("SELECT income FROM users WHERE id = ?", [user_id])
         income = db.fetchone()[0]
         db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
-        amount = db.fetchall()
+        amount = db.fetchall()[0]
         expenses_for_this_month = 0
         for amt in amount:
-            expenses_for_this_month = expenses_for_this_month + amt
+            expenses_for_this_month = expenses_for_this_month + int(amt)
         categories = ["Food", "Utilities", "Health Care", "Debt", "Insurance", "Transportation", "Clothing", "Entertainment", "Miscellaneous"]
         expenses = []
         for category in categories:
             db.execute("SELECT amount FROM record WHERE month = ? AND year = ? AND category = ?", [current_month, current_year, category])
-            amount = db.fetchall()
-            expenses.append(amount)
-        db.execute("SELECT budget FROM users WHERE id = ?", user_id)
+            try:
+                amount_of_money_spent = db.fetchall()[0]
+                print(amount_of_money_spent)
+                total_amount = 0
+                for amt in amount_of_money_spent:
+                    total_amount = total_amount + int(amt)
+                expenses.append(total_amount)
+            except IndexError:
+                amount_of_money_spent = 0
+        db.execute("SELECT budget FROM users WHERE id = ?", [user_id])
         budget = db.fetchone()[0]
+        max_amount = max(expenses)
+        index_of_max_amount = expenses.index(max_amount)
+        category_with_most_expenses = categories[index_of_max_amount]    
         con.commit()
     con.close()
-    for i in range(len(expenses)):
-        if expenses[i + 1] > expenses[i]:
-            category_with_most_expenses = expenses[i + 1]
-        else:
-            category_with_most_expenses = expenses[i]
     return render_template("index.html", income=income, expenses_for_this_month=expenses_for_this_month, category_with_most_expenses=category_with_most_expenses, budget=budget)
 
 @app.route("/register", methods=["GET", "POST"])
