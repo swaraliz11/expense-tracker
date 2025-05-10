@@ -35,44 +35,7 @@ def after_request(response):
 @login_required
 def index():
     """Show summary of expenses"""
-    current_month = int(datetime.now().month)
-    current_day = datetime.today().day
-    current_year = datetime.today().year
-    user_id = session["user_id"]
-    with sqlite3.connect("expense.db", check_same_thread=False) as con:
-        db = con.cursor()
-        db.execute("SELECT COUNT(*) FROM record")
-        count = int(db.fetchone()[0])
-        if count == 0:
-            return apology("you don't have any expenses so far")
-        db.execute("SELECT income FROM users WHERE id = ?", [user_id])
-        income = db.fetchone()[0]
-        db.execute("SELECT amount FROM record WHERE month = ? AND year = ?", [current_month, current_year])
-        amount = db.fetchall()[0]
-        expenses_for_this_month = 0
-        for amt in amount:
-            expenses_for_this_month = expenses_for_this_month + int(amt)
-        categories = ["Food", "Utilities", "Health Care", "Debt", "Insurance", "Transportation", "Clothing", "Entertainment", "Miscellaneous"]
-        expenses = []
-        for category in categories:
-            db.execute("SELECT amount FROM record WHERE month = ? AND year = ? AND category = ?", [current_month, current_year, category])
-            try:
-                amount_of_money_spent = db.fetchall()[0]
-                print(amount_of_money_spent)
-                total_amount = 0
-                for amt in amount_of_money_spent:
-                    total_amount = total_amount + int(amt)
-                expenses.append(total_amount)
-            except IndexError:
-                amount_of_money_spent = 0
-        db.execute("SELECT budget FROM users WHERE id = ?", [user_id])
-        budget = db.fetchone()[0]
-        max_amount = max(expenses)
-        index_of_max_amount = expenses.index(max_amount)
-        category_with_most_expenses = categories[index_of_max_amount]    
-        con.commit()
-    con.close()
-    return render_template("index.html", income=income, expenses_for_this_month=expenses_for_this_month, category_with_most_expenses=category_with_most_expenses, budget=budget)
+    
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
