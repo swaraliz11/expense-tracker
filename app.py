@@ -14,6 +14,7 @@ app = Flask(__name__)
 # Configure system to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 Session(app)
 
 # Create tables
