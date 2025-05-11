@@ -35,7 +35,26 @@ def after_request(response):
 @login_required
 def index():
     """Show summary of expenses"""
-    
+    current_day = datetime.now().day
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    user_id = session["user_id"]
+    with sqlite3.connect("expense.db", check_same_thread=False) as con:
+        db = con.cursor()
+        db.execute("SELECT income FROM users WHERE id = ?", [user_id])
+        monthly_income = int(db.fetchone()[0])
+        db.execute("SELECT amount FROM record WHERE month = ? AND user_id = ? AND year = ?", [current_month, user_id, current_year])
+        expenses = db.fetchall()[0]
+        max_amount = max(expenses)
+        expenses_for_this_month = 0
+        for expense in expenses:
+            expenses_for_this_month = expenses_for_this_month + expense
+        categories = ["Food", "Utilities", "Health Care", "Debt", "Insurance", "Transportation", "Clothing", "Entertainment", "Miscellaneous"]
+        db.execute("SELECT category FROM record WHERE user_id = ? AND amount = ? AND month = ? AND year = ?", [user_id, max_amount, current_month, current_year])
+        category_with_most_expenses = db.fetchone()[0]
+        db.execute("SELECT budget FROM users WHERE id = ?", [user_id])
+        monthly_budget = db.fetchone()[0]
+    return render_template("index.html", monhtly_income=monthly_income, expenses_for_this_month=expenses_for_this_month, category_with_most_expenses=category_with_most_expenses, monthly_budget=monthly_budget)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
