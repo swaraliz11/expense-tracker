@@ -44,9 +44,12 @@ def index():
         db.execute("SELECT income FROM users WHERE id = ?", [user_id])
         monthly_income = int(db.fetchone()[0])
         db.execute("SELECT amount FROM record WHERE month = ? AND user_id = ? AND year = ?", [current_month, user_id, current_year])
+        # Get expenses for current month
         expenses = db.fetchall()
+        # Find the maximum expense among current month's expenses
         max_amount = max(expenses)[0]
         expenses_for_this_month = 0
+        # Find current month's total expenses
         for expense in expenses:
             expenses_for_this_month = expenses_for_this_month + int(expense[0])
         db.execute("SELECT category FROM record WHERE user_id = ? AND amount = ? AND month = ? AND year = ?", [user_id, max_amount, current_month, current_year])
@@ -54,6 +57,7 @@ def index():
         db.execute("SELECT budget FROM users WHERE id = ?", [user_id])
         monthly_budget = db.fetchone()[0]
         con.commit()
+    # Display monthly income, current month's total expenses, category with most expenses and monthly budget
     return render_template("index.html", monthly_income=monthly_income, expenses_for_this_month=expenses_for_this_month, category_with_most_expenses=category_with_most_expenses, monthly_budget=monthly_budget)
 
 @app.route("/register", methods=["GET", "POST"])
