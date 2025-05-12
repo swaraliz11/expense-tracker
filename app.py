@@ -55,6 +55,7 @@ def index():
         category_with_most_expenses = db.fetchone()[0]
         db.execute("SELECT budget FROM users WHERE id = ?", [user_id])
         monthly_budget = db.fetchone()[0]
+        con.commit()
     return render_template("index.html", monthly_income=monthly_income, expenses_for_this_month=expenses_for_this_month, category_with_most_expenses=category_with_most_expenses, monthly_budget=monthly_budget)
 
 @app.route("/register", methods=["GET", "POST"])
