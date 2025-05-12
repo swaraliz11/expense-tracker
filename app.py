@@ -36,7 +36,6 @@ def after_request(response):
 @login_required
 def index():
     """Show summary of expenses"""
-    current_day = datetime.now().day
     current_month = datetime.now().month
     current_year = datetime.now().year
     user_id = session["user_id"]
@@ -45,12 +44,11 @@ def index():
         db.execute("SELECT income FROM users WHERE id = ?", [user_id])
         monthly_income = int(db.fetchone()[0])
         db.execute("SELECT amount FROM record WHERE month = ? AND user_id = ? AND year = ?", [current_month, user_id, current_year])
-        expenses = db.fetchall()[0]
-        max_amount = max(expenses)
+        expenses = db.fetchall()
+        max_amount = max(expenses)[0]
         expenses_for_this_month = 0
         for expense in expenses:
-            expenses_for_this_month = expenses_for_this_month + expense
-        categories = ["Food", "Utilities", "Health Care", "Debt", "Insurance", "Transportation", "Clothing", "Entertainment", "Miscellaneous"]
+            expenses_for_this_month = expenses_for_this_month + int(expense[0])
         db.execute("SELECT category FROM record WHERE user_id = ? AND amount = ? AND month = ? AND year = ?", [user_id, max_amount, current_month, current_year])
         category_with_most_expenses = db.fetchone()[0]
         db.execute("SELECT budget FROM users WHERE id = ?", [user_id])
