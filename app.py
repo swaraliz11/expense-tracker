@@ -41,6 +41,10 @@ def index():
     user_id = session["user_id"]
     with sqlite3.connect("expense.db", check_same_thread=False) as con:
         db = con.cursor()
+        db.execute("SELECT COUNT(*) FROM record WHERE month = ? AND user_id = ? AND year = ?", [current_month, user_id, current_year])
+        count = db.fetchone()[0]
+        if count == 0:
+            return apology("you do not have any expenses yet")
         db.execute("SELECT income FROM users WHERE id = ?", [user_id])
         monthly_income = int(db.fetchone()[0])
         db.execute("SELECT amount FROM record WHERE month = ? AND user_id = ? AND year = ?", [current_month, user_id, current_year])
